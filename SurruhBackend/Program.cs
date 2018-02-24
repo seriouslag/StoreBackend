@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SurruhBackend.Models;
 
 namespace SurruhBackend
 {
@@ -14,7 +11,25 @@ namespace SurruhBackend
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var buildWebHost = BuildWebHost(args);
+
+            using (var scope = buildWebHost.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogDebug((services != null).ToString());
+
+                try
+                {
+                    SeedData.Initialize(services);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "An error occurred seeding the DB.");
+                }
+            }
+
+            buildWebHost.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
