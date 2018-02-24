@@ -36,7 +36,7 @@ namespace SurruhBackend
         {
             IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
+                .AddJsonFile("firebase.json");
             Config = builder.Build();
 
             // Set scopes from config
