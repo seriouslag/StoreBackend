@@ -74,7 +74,7 @@ namespace SurruhBackend
                 });
             services.AddMvc();
 
-            services.AddDbContext<SurruhBackendContext>(options =>
+            services.AddDbContext<Context>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SurruhBackendContext")));
         }
 

@@ -10,8 +10,8 @@ using System;
 
 namespace SurruhBackend.Migrations
 {
-    [DbContext(typeof(SurruhBackendContext))]
-    [Migration("20180223204808_init")]
+    [DbContext(typeof(Context))]
+    [Migration("20180225082258_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,15 +26,23 @@ namespace SurruhBackend.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ContentType");
+                    b.Property<byte[]>("Content");
 
-                    b.Property<byte[]>("Data");
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(64);
+
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<int>("Height");
 
-                    b.Property<int>("Length");
+                    b.Property<bool?>("IsVisible");
 
-                    b.Property<string>("Name");
+                    b.Property<DateTime?>("LastModified");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255);
 
                     b.Property<int>("Width");
 
@@ -43,56 +51,40 @@ namespace SurruhBackend.Migrations
                     b.ToTable("Images");
                 });
 
-            modelBuilder.Entity("SurruhBackend.Models.ImageData", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("Extension");
-
-                    b.Property<int>("ImageId");
-
-                    b.Property<bool>("IsVisible");
-
-                    b.Property<DateTime>("LastModified");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ImageId")
-                        .IsUnique();
-
-                    b.ToTable("ImageData");
-                });
-
-            modelBuilder.Entity("SurruhBackend.Models.ImageData_Tag", b =>
-                {
-                    b.Property<int>("ImageDataId");
-
-                    b.Property<int>("TagId");
-
-                    b.HasKey("ImageDataId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("ImageData_Tag");
-                });
-
             modelBuilder.Entity("SurruhBackend.Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<string>("ProductDescription");
+                    b.Property<bool?>("IsVisible");
+
+                    b.Property<DateTime?>("LastModified");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("ProductDescription")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("SurruhBackend.Models.Product_Tag", b =>
+                {
+                    b.Property<int>("ProductId");
+
+                    b.Property<int>("TagId");
+
+                    b.HasKey("ProductId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("Product_Tag");
                 });
 
             modelBuilder.Entity("SurruhBackend.Models.ProductOption", b =>
@@ -100,11 +92,21 @@ namespace SurruhBackend.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool?>("IsVisible");
+
+                    b.Property<DateTime?>("LastModified");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255);
 
                     b.Property<double>("Price");
 
                     b.Property<int>("ProductId");
+
+                    b.Property<string>("ProductOptionDescription");
 
                     b.HasKey("Id");
 
@@ -113,17 +115,17 @@ namespace SurruhBackend.Migrations
                     b.ToTable("ProductOptions");
                 });
 
-            modelBuilder.Entity("SurruhBackend.Models.ProductOption_ImageData", b =>
+            modelBuilder.Entity("SurruhBackend.Models.ProductOption_Image", b =>
                 {
                     b.Property<int>("ProductOptionId");
 
-                    b.Property<int>("ImageDataId");
+                    b.Property<int>("ImageId");
 
-                    b.HasKey("ProductOptionId", "ImageDataId");
+                    b.HasKey("ProductOptionId", "ImageId");
 
-                    b.HasIndex("ImageDataId");
+                    b.HasIndex("ImageId");
 
-                    b.ToTable("ProductOption_ImageData");
+                    b.ToTable("ProductOption_Image");
                 });
 
             modelBuilder.Entity("SurruhBackend.Models.Tag", b =>
@@ -131,31 +133,30 @@ namespace SurruhBackend.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime?>("CreatedDate");
+
+                    b.Property<bool?>("IsVisible");
+
+                    b.Property<DateTime?>("LastModified");
+
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(255);
 
                     b.HasKey("Id");
 
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("SurruhBackend.Models.ImageData", b =>
+            modelBuilder.Entity("SurruhBackend.Models.Product_Tag", b =>
                 {
-                    b.HasOne("SurruhBackend.Models.Image", "Image")
-                        .WithOne("ImageData")
-                        .HasForeignKey("SurruhBackend.Models.ImageData", "ImageId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SurruhBackend.Models.ImageData_Tag", b =>
-                {
-                    b.HasOne("SurruhBackend.Models.ImageData", "ImageData")
-                        .WithMany("ImageData_Tags")
-                        .HasForeignKey("ImageDataId")
+                    b.HasOne("SurruhBackend.Models.Product", "Product")
+                        .WithMany("Tags")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SurruhBackend.Models.Tag", "Tag")
-                        .WithMany("ImageData_Tags")
+                        .WithMany("Products")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -168,15 +169,15 @@ namespace SurruhBackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("SurruhBackend.Models.ProductOption_ImageData", b =>
+            modelBuilder.Entity("SurruhBackend.Models.ProductOption_Image", b =>
                 {
-                    b.HasOne("SurruhBackend.Models.ImageData", "ImageData")
-                        .WithMany("ProductOption_ImageData")
-                        .HasForeignKey("ImageDataId")
+                    b.HasOne("SurruhBackend.Models.Image", "Image")
+                        .WithMany("ProductOption")
+                        .HasForeignKey("ImageId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SurruhBackend.Models.ProductOption", "ProductOption")
-                        .WithMany("ProductOption_ImageData")
+                        .WithMany("Images")
                         .HasForeignKey("ProductOptionId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

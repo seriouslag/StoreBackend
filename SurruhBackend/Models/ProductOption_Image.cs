@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace SurruhBackend.Models
 {
-    public class ProductOption_ImageData
+    public class ProductOption_Image
     {
         public int ProductOptionId { get; set; }
         public ProductOption ProductOption { get; set; }
 
-        public int ImageDataId { get; set; }
-        public ImageData ImageData { get; set; }
+        public int ImageId { get; set; }
+        public Image Image { get; set; }
     }
 }

@@ -3,7 +3,7 @@
 namespace SurruhBackend.Controllers
 {
     [Produces("application/json")]
-    [Route("api/User")]
+    [Route("api/user")]
     public class UserController : Controller
     {
 
@@ -22,6 +22,17 @@ namespace SurruhBackend.Controllers
 
             return new Value("You are not authorized.");
         }
+
+        [HttpGet("admin")]
+        public bool GetAdminCheck()
+        {
+            if (User.IsInRole("Admin"))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 
     public class Value
@@ -31,6 +42,6 @@ namespace SurruhBackend.Controllers
         public Value(string name)
         {
             Name = name;
-        }   
+        }
     }
 }

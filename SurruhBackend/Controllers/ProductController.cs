@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SurruhBackend.Models;
 using SurruhBackend.ViewModels;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SurruhBackend.Controllers
 {
@@ -15,9 +14,9 @@ namespace SurruhBackend.Controllers
     public class ProductController : Controller
     {
 
-        private readonly SurruhBackendContext _context;
+        private readonly Context _context;
 
-        public ProductController(SurruhBackendContext context)
+        public ProductController(Context context)
         {
             _context = context;
         }
@@ -39,23 +38,19 @@ namespace SurruhBackend.Controllers
                             Name = po.Name,
                             Price = po.Price,
                             ProductId = po.ProductId,
-                            ImageData = po.ProductOption_ImageData
-                                .Select(x => x.ImageData)
-                                .Select(im => new ImageDataViewModel
+                            Images = po.Images
+                                .Select(x => x.Image)
+                                .Select(i => new ImageViewModel
                                 {
-                                    Id = im.Id,
-                                    Name = im.Name,
-                                    Extension = im.Extension,
-                                    CreatedDate = im.CreatedDate,
-                                    LastModified = im.LastModified,
-                                    ImageId = im.ImageId,
-                                    IsVisible = im.IsVisible,
-                                    Tags = im.ImageData_Tags
-                                        .Select(t => new TagViewModel
-                                        {
-                                            Id = t.Tag.Id,
-                                            Name = t.Tag.Name
-                                        }).ToList()
+                                    Id = i.Id,
+                                    Name = i.Name,
+                                    CreatedDate = i.CreatedDate,
+                                    LastModified = i.LastModified,
+                                    IsVisible = i.IsVisible,
+                                    // Content = i.Content,
+                                    ContentType = i.ContentType,
+                                    Height = i.Height,
+                                    Width = i.Width
                                 }).ToList()
                         }).ToList(),
                 });
@@ -84,21 +79,19 @@ namespace SurruhBackend.Controllers
                         Name = po.Name,
                         Price = po.Price,
                         ProductId = po.ProductId,
-                        ImageData = po.ProductOption_ImageData.Select(x => x.ImageData)
-                            .Select(im => new ImageDataViewModel
+                        Images = po.Images
+                            .Select(x => x.Image)
+                            .Select(i => new ImageViewModel
                             {
-                                Id = im.Id,
-                                Name = im.Name,
-                                Extension = im.Extension,
-                                CreatedDate = im.CreatedDate,
-                                LastModified = im.LastModified,
-                                ImageId = im.ImageId,
-                                IsVisible = im.IsVisible,
-                                Tags = im.ImageData_Tags.Select(t => new TagViewModel
-                                {
-                                    Id = t.Tag.Id,
-                                    Name = t.Tag.Name
-                                }).ToList()
+                                Id = i.Id,
+                                Name = i.Name,
+                                CreatedDate = i.CreatedDate,
+                                LastModified = i.LastModified,
+                                IsVisible = i.IsVisible,
+                                // Content = i.Content,
+                                ContentType = i.ContentType,
+                                Height = i.Height,
+                                Width = i.Width
                             }).ToList()
                     }).ToList(),
                 })
@@ -115,18 +108,21 @@ namespace SurruhBackend.Controllers
 
         // POST api/<controller>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public void Post([FromBody]string value)
         {
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public void Delete(int id)
         {
         }

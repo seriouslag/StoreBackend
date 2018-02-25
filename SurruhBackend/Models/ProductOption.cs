@@ -6,20 +6,21 @@ using System.Threading.Tasks;
 
 namespace SurruhBackend.Models
 {
-    public class ProductOption
+    public class ProductOption: BaseEntity
     {
 
         public ProductOption()
         {
-            ProductOption_ImageData = new List<ProductOption_ImageData>();
+            Images = new List<ProductOption_Image>();
         }
 
 
         public int Id { get; set; }
-        public string Name { get; set; }
         public double Price { get; set; }
+        public string ProductOptionDescription { get; set; }
 
-        public IEnumerable<ProductOption_ImageData> ProductOption_ImageData { get; set; }
+
+        public IEnumerable<ProductOption_Image> Images { get; set; }
 
         public int ProductId { get; set; }
         public Product Product { get; set; }

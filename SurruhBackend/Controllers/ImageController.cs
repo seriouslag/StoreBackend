@@ -10,41 +10,38 @@ using SurruhBackend.ViewModels;
 
 namespace SurruhBackend.Controllers
 {
-    [Produces("application/json")]
-    [Route("api/imageData")]
-    public class ImageDataController : Controller
+    [Route("api/image"), Route("api/images")]
+    public class ImageController : Controller
     {
-        private readonly SurruhBackendContext _context;
+        private readonly Context _context;
 
-        public ImageDataController(SurruhBackendContext context)
+        public ImageController(Context context)
         {
             _context = context;
         }
 
-        // GET: api/imageData
+        // GET: api/image
+        [Produces("application/json")]
         [HttpGet]
-        public IActionResult GetImageData()
+        public IActionResult GetImage()
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var imageData = _context.ImageData
-                .Select(id => new ImageDataViewModel
+            var imageData = _context.Images
+                .Select(id => new ImageViewModel
                 {
                     Id = id.Id,
-                    ImageId = id.ImageId,
                     IsVisible = id.IsVisible,
                     LastModified = id.LastModified,
                     Name = id.Name,
                     CreatedDate = id.CreatedDate,
-                    Extension = id.Extension,
-                    Tags = id.ImageData_Tags.Select(x => new TagViewModel
-                        {
-                            Id = x.Tag.Id,
-                            Name = x.Tag.Name
-                        }).ToList()
+                    // Content = id.Content,
+                    ContentType = id.ContentType,
+                    Height = id.Height,
+                    Width = id.Width
                 })
                 .Where(id => id.IsVisible == true);
 
@@ -56,9 +53,10 @@ namespace SurruhBackend.Controllers
             return NotFound();
         }
 
-        // GET: api/imageData/all
+        // GET: api/image/all
+        [Produces("application/json")]
         [HttpGet("all")]
-        public IActionResult GetAllImageData()
+        public IActionResult GetAllImage()
         {
             if (!ModelState.IsValid)
             {
@@ -67,77 +65,92 @@ namespace SurruhBackend.Controllers
 
             if (User.IsInRole("Admin"))
             {
-                return Ok(_context.ImageData
-                    .Select(id => new ImageDataViewModel
+                return Ok(_context.Images
+                    .Select(id => new ImageViewModel
                     {
                         Id = id.Id,
-                        ImageId = id.ImageId,
                         IsVisible = id.IsVisible,
                         LastModified = id.LastModified,
                         Name = id.Name,
                         CreatedDate = id.CreatedDate,
-                        Extension = id.Extension,
-                        Tags = id.ImageData_Tags.Select(x => new TagViewModel
-                        {
-                            Id = x.Tag.Id,
-                            Name = x.Tag.Name
-                        }).ToList()
+                        // Content = id.Content,
+                        ContentType = id.ContentType,
+                        Height = id.Height,
+                        Width = id.Width
                     }));
             }
-            return GetImageData();
+            return GetImage();
         }
 
-        // GET: api/imageData/5
-        [HttpGet("{imageDataId}")]
-        public async Task<IActionResult> GetImageData([FromRoute] int imageDataId)
+        // GET: api/image/5
+        [HttpGet("{id}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetImage([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            ImageDataViewModel imageData = await _context.ImageData.Select(id => new ImageDataViewModel
-            {
-                Id = id.Id,
-                ImageId = id.ImageId,
-                LastModified = id.LastModified,
-                Name = id.Name,
-                CreatedDate = id.CreatedDate,
-                Extension = id.Extension,
-                IsVisible = id.IsVisible,
-                Tags = id.ImageData_Tags.Select(x => new TagViewModel
+            ImageViewModel image = await _context.Images
+                .Select(i => new ImageViewModel
                 {
-                    Id = x.Tag.Id,
-                    Name = x.Tag.Name
-                }).ToList()
-            })
-            .Where(id => id.IsVisible == true)
-            .SingleOrDefaultAsync(id => id.Id == imageDataId);
+                    Id = i.Id,
+                    LastModified = i.LastModified,
+                    Name = i.Name,
+                    CreatedDate = i.CreatedDate,
+                    IsVisible = i.IsVisible,
+                    // Content = id.Content,
+                    ContentType = i.ContentType,
+                    Height = i.Height,
+                    Width = i.Width
+                })
+                .Where(i => i.IsVisible == true)
+                .SingleOrDefaultAsync(i => i.Id == id);
 
-            if (imageData == null || imageData.ToString() == "[]")
+            if (image == null || image.ToString() == "[]")
             {
                 return NotFound();
             }
 
-            return Ok(imageData);
+            return Ok(image);
         }
 
-        // PUT: api/imageDatas/5
+        // GET: api/image/file/5
+        [HttpGet("file/{id}")]
+        public async Task<IActionResult> GetImageFile([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var image = await _context.Images
+                .SingleOrDefaultAsync(i => i.Id == id);
+
+            if (image == null || image.ToString() == "[]")
+            {
+                return NotFound();
+            }
+            
+            return File(image.Content, image.ContentType, image.FileName());
+        }
+
+        // PUT: api/image/5
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutImageData([FromRoute] int id, [FromBody] ImageData imageData)
+        public async Task<IActionResult> PutImageData([FromRoute] int id, [FromBody] Image image)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != imageData.Id)
+            if (id != image.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(imageData).State = EntityState.Modified;
+            _context.Entry(image).State = EntityState.Modified;
 
             try
             {
@@ -158,24 +171,24 @@ namespace SurruhBackend.Controllers
             return NoContent();
         }
 
-        // POST: api/imageDatas
+        // POST: api/image
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> PostImageData([FromBody] ImageData imageData)
+        public async Task<IActionResult> PostImageData([FromBody] Image image)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.ImageData.Add(imageData);
+            _context.Images.Add(image);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (ImageDataExists(imageData.Id))
+                if (ImageDataExists(image.Id))
                 {
                     return new StatusCodeResult(StatusCodes.Status409Conflict);
                 }
@@ -185,10 +198,10 @@ namespace SurruhBackend.Controllers
                 }
             }
 
-            return CreatedAtAction("GetImageData", new { id = imageData.Id }, imageData);
+            return CreatedAtAction("GetImageData", new { id = image.Id }, image);
         }
 
-        // DELETE: api/imageDatas/5
+        // DELETE: api/image/5
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteImageData([FromRoute] int id)
@@ -198,13 +211,13 @@ namespace SurruhBackend.Controllers
                 return BadRequest(ModelState);
             }
 
-            var imageData = await _context.ImageData.SingleOrDefaultAsync(m => m.Id == id);
+            var imageData = await _context.Images.SingleOrDefaultAsync(m => m.Id == id);
             if (imageData == null)
             {
                 return NotFound();
             }
 
-            _context.ImageData.Remove(imageData);
+            _context.Images.Remove(imageData);
             await _context.SaveChangesAsync();
 
             return Ok(imageData);
@@ -212,7 +225,7 @@ namespace SurruhBackend.Controllers
 
         private bool ImageDataExists(int id)
         {
-            return _context.ImageData.Any(e => e.Id == id);
+            return _context.Images.Any(e => e.Id == id);
         }
     }
 }

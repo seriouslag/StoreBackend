@@ -7,18 +7,16 @@ using System.Threading.Tasks;
 
 namespace SurruhBackend.Models
 {
-    public class Tag
+    public class Tag: BaseEntity
     {
         public Tag()
         {
-            ImageData_Tags = new List<ImageData_Tag>();
+            Products = new List<Product_Tag>();
         }
 
         public int Id { get; set; }
-        [Required]
-        public string Name { get; set; }
 
-        public ICollection<ImageData_Tag> ImageData_Tags { get; set; }
+        public ICollection<Product_Tag> Products { get; set; }
 
         
     }

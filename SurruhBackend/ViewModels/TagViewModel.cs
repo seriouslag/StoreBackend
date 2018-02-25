@@ -1,8 +1,9 @@
-﻿namespace SurruhBackend.ViewModels
+﻿using SurruhBackend.Models;
+
+namespace SurruhBackend.ViewModels
 {
-    public class TagViewModel
+    public class TagViewModel: BaseEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
     }
 }
