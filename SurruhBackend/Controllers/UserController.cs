@@ -33,6 +33,16 @@ namespace SurruhBackend.Controllers
 
             return false;
         }
+        [HttpGet("auth")]
+        public bool GetAuthCheck()
+        {
+            if (User.IsInRole("Auth"))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 
     public class Value

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SurruhBackend.Data;
 using SurruhBackend.Models;
 
 namespace SurruhBackend
@@ -19,17 +18,6 @@ namespace SurruhBackend
                 var services = scope.ServiceProvider;
                 var logger = services.GetRequiredService<ILogger<Program>>();
                 logger.LogDebug((services != null).ToString());
-
-                // Set up repository
-                try
-                {
-                    Repository.Initialize(services);
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex, "An error occurred seeting up the Repository.");
-                }
-
 
                 // Set up DB seed
                 try

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SurruhBackend.Models;
-using SurruhBackend.ViewModels;
 
 namespace SurruhBackend.Controllers
 {
@@ -138,7 +137,7 @@ namespace SurruhBackend.Controllers
         // PUT: api/image/5
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutImageData([FromRoute] int id, [FromBody] Image image)
+        public async Task<IActionResult> PutImage([FromRoute] int id, [FromBody] Image image)
         {
             if (!ModelState.IsValid)
             {
@@ -158,7 +157,7 @@ namespace SurruhBackend.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ImageDataExists(id))
+                if (!ImageExists(id))
                 {
                     return NotFound();
                 }
@@ -174,7 +173,7 @@ namespace SurruhBackend.Controllers
         // POST: api/image
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> PostImageData([FromBody] Image image)
+        public async Task<IActionResult> PostImage([FromBody] Image image)
         {
             if (!ModelState.IsValid)
             {
@@ -188,7 +187,7 @@ namespace SurruhBackend.Controllers
             }
             catch (DbUpdateException)
             {
-                if (ImageDataExists(image.Id))
+                if (ImageExists(image.Id))
                 {
                     return new StatusCodeResult(StatusCodes.Status409Conflict);
                 }
@@ -204,28 +203,28 @@ namespace SurruhBackend.Controllers
         // DELETE: api/image/5
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteImageData([FromRoute] int id)
+        public async Task<IActionResult> DeleteImage([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var imageData = await _context.Images.SingleOrDefaultAsync(m => m.Id == id);
-            if (imageData == null)
+            var image = await _context.Images.SingleOrDefaultAsync(m => m.Id == id);
+            if (image == null)
             {
                 return NotFound();
             }
 
-            _context.Images.Remove(imageData);
+            _context.Images.Remove(image);
             await _context.SaveChangesAsync();
 
-            return Ok(imageData);
+            return Ok(image);
         }
 
-        private bool ImageDataExists(int id)
+        private bool ImageExists(int id)
         {
-            return _context.Images.Any(e => e.Id == id);
+            return _context.Images.Any(i => i.Id == id);
         }
     }
 }
