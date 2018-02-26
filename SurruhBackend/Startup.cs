@@ -42,6 +42,7 @@ namespace SurruhBackend
             // Set scopes from config
             scopes = Config["Google:firebase_scopes"].Split(',');
 
+
             services.AddCors();
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -72,7 +73,10 @@ namespace SurruhBackend
                         ValidateLifetime = true
                     };
                 });
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
 
             services.AddDbContext<Context>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SurruhBackendContext")));

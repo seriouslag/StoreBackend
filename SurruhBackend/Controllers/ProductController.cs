@@ -123,7 +123,7 @@ namespace SurruhBackend.Controllers
             }
             catch (DbUpdateException)
             {
-                if (ProductExists(product.Id))
+                if (ProductExistsByName(product.Name))
                 {
                     return new StatusCodeResult(StatusCodes.Status409Conflict);
                 }
@@ -137,6 +137,7 @@ namespace SurruhBackend.Controllers
         }
 
         // PUT api/<controller>/5
+
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Put(int id, [FromBody]Product product)
@@ -159,7 +160,7 @@ namespace SurruhBackend.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProductExists(id))
+                if (!ProductExistsById(id))
                 {
                     return NotFound();
                 }
@@ -194,9 +195,14 @@ namespace SurruhBackend.Controllers
             return Ok(product);
         }
 
-        private bool ProductExists(int id)
+        private bool ProductExistsById(int id)
         {
             return _context.Products.Any(p => p.Id == id);
+        }
+
+        private bool ProductExistsByName(string name)
+        {
+            return _context.Products.Any(p => p.Name == name);
         }
     }
 }

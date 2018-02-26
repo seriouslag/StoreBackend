@@ -10,6 +10,10 @@ namespace SurruhBackend.Models
     {
         public int Id { get; set; }
 
+        //figure out how to make unique
+        [Required]
+        public override string Name { get; set; }
+
         [Required]
         public string ProductDescription { get; set; }
 

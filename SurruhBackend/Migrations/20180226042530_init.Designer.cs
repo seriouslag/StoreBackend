@@ -11,7 +11,7 @@ using System;
 namespace SurruhBackend.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20180225082258_init")]
+    [Migration("20180226042530_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
