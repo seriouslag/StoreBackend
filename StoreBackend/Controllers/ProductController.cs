@@ -151,6 +151,10 @@ namespace StoreBackend.Controllers
             {
                 return BadRequest();
             }
+            else if(ProductExistsByName(product.Name))
+            {
+                return new StatusCodeResult(StatusCodes.Status409Conflict);
+            }
 
             _context.Entry(product).State = EntityState.Modified;
 
