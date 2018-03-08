@@ -39,11 +39,12 @@ namespace StoreBackend.Migrations
                     IsVisible = table.Column<bool>(nullable: true),
                     LastModified = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 255, nullable: false),
-                    ProductDescription = table.Column<string>(nullable: false)
+                    ProductDescription = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
+                    table.UniqueConstraint("AK_Products_Name", x => x.Name);
                 });
 
             migrationBuilder.CreateTable(

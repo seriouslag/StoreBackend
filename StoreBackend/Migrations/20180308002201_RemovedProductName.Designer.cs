@@ -11,8 +11,8 @@ using System;
 namespace StoreBackend.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20180304070007_init")]
-    partial class init
+    [Migration("20180308002201_RemovedProductName")]
+    partial class RemovedProductName
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,10 +66,11 @@ namespace StoreBackend.Migrations
                         .IsRequired()
                         .HasMaxLength(255);
 
-                    b.Property<string>("ProductDescription")
-                        .IsRequired();
+                    b.Property<string>("ProductDescription");
 
                     b.HasKey("Id");
+
+                    b.HasAlternateKey("Name");
 
                     b.ToTable("Products");
                 });

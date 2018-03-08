@@ -17,6 +17,10 @@ namespace StoreBackend.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Product>(ps => {
+                ps.HasAlternateKey(p => p.Name);
+            }); 
+             
             modelBuilder.Entity<Product_Tag>()
                 .HasKey(t => new { t.ProductId, t.TagId });
 
@@ -42,7 +46,6 @@ namespace StoreBackend.Models
                 .HasOne(poi => poi.Image)
                 .WithMany(i => i.ProductOption)
                 .HasForeignKey(poi => poi.ImageId);
-
         } 
     }
 }
