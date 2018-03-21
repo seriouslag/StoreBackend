@@ -21,6 +21,5 @@ namespace StoreBackend.Models
             ProductOptions = new List<ProductOption>();
             Tags = new List<Product_Tag>();
         }
-
     }
 }

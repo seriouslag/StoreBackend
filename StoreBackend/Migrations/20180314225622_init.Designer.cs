@@ -11,8 +11,8 @@ using System;
 namespace StoreBackend.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20180308002201_RemovedProductName")]
-    partial class RemovedProductName
+    [Migration("20180314225622_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,7 +36,7 @@ namespace StoreBackend.Migrations
 
                     b.Property<int>("Height");
 
-                    b.Property<bool?>("IsVisible");
+                    b.Property<bool?>("IsActivated");
 
                     b.Property<DateTime?>("LastModified");
 
@@ -58,7 +58,7 @@ namespace StoreBackend.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool?>("IsVisible");
+                    b.Property<bool?>("IsActivated");
 
                     b.Property<DateTime?>("LastModified");
 
@@ -70,7 +70,8 @@ namespace StoreBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Name");
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Products");
                 });
@@ -95,7 +96,7 @@ namespace StoreBackend.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool?>("IsVisible");
+                    b.Property<bool?>("IsActivated");
 
                     b.Property<DateTime?>("LastModified");
 
@@ -136,7 +137,7 @@ namespace StoreBackend.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool?>("IsVisible");
+                    b.Property<bool?>("IsActivated");
 
                     b.Property<DateTime?>("LastModified");
 

@@ -19,7 +19,7 @@ namespace StoreBackend.Migrations
                     ContentType = table.Column<string>(maxLength: 64, nullable: false),
                     CreatedDate = table.Column<DateTime>(nullable: true),
                     Height = table.Column<int>(nullable: false),
-                    IsVisible = table.Column<bool>(nullable: true),
+                    IsActivated = table.Column<bool>(nullable: true),
                     LastModified = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 255, nullable: false),
                     Width = table.Column<int>(nullable: false)
@@ -36,7 +36,7 @@ namespace StoreBackend.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatedDate = table.Column<DateTime>(nullable: true),
-                    IsVisible = table.Column<bool>(nullable: true),
+                    IsActivated = table.Column<bool>(nullable: true),
                     LastModified = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 255, nullable: false),
                     ProductDescription = table.Column<string>(nullable: true)
@@ -44,7 +44,6 @@ namespace StoreBackend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
-                    table.UniqueConstraint("AK_Products_Name", x => x.Name);
                 });
 
             migrationBuilder.CreateTable(
@@ -54,7 +53,7 @@ namespace StoreBackend.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatedDate = table.Column<DateTime>(nullable: true),
-                    IsVisible = table.Column<bool>(nullable: true),
+                    IsActivated = table.Column<bool>(nullable: true),
                     LastModified = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 255, nullable: false)
                 },
@@ -70,7 +69,7 @@ namespace StoreBackend.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatedDate = table.Column<DateTime>(nullable: true),
-                    IsVisible = table.Column<bool>(nullable: true),
+                    IsActivated = table.Column<bool>(nullable: true),
                     LastModified = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 255, nullable: false),
                     Price = table.Column<double>(nullable: false),
@@ -150,6 +149,12 @@ namespace StoreBackend.Migrations
                 name: "IX_ProductOptions_ProductId",
                 table: "ProductOptions",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_Name",
+                table: "Products",
+                column: "Name",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

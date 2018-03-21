@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace StoreBackend.Models
 {
-    public class ProductViewModel: BaseEntity
+    public class ProductViewModel: BaseEntityViewModel
     {
         public int Id { get; set; }
         public string ProductDescription { get; set; }

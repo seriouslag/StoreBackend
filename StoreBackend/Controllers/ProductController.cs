@@ -26,12 +26,16 @@ namespace StoreBackend.Controllers
         [HttpGet]
         public IActionResult GetProducts()
         {
+            System.Console.WriteLine("*************************" + _context.Products.Single(p => p.Id == 1).IsActivated);
             var products = _context.Products
                 .Select(p => new ProductViewModel
                 {
                     Id = p.Id,
                     Name = p.Name,
                     ProductDescription = p.ProductDescription,
+                    CreatedDate = p.CreatedDate,
+                    LastModified = p.LastModified,
+                    IsActivated = p.IsActivated,
                     ProductOptions = p.ProductOptions
                         .Select(po => new ProductOptionViewModel
                         {
@@ -39,6 +43,10 @@ namespace StoreBackend.Controllers
                             Name = po.Name,
                             Price = po.Price,
                             ProductId = po.ProductId,
+                            IsActivated = po.IsActivated,
+                            CreatedDate = po.CreatedDate,
+                            LastModified = po.LastModified,
+                            ProductOptionDescription = po.ProductOptionDescription,
                             Images = po.Images
                                 .Select(x => x.Image)
                                 .Select(i => new ImageViewModel
@@ -47,7 +55,7 @@ namespace StoreBackend.Controllers
                                     Name = i.Name,
                                     CreatedDate = i.CreatedDate,
                                     LastModified = i.LastModified,
-                                    IsVisible = i.IsVisible,
+                                    IsActivated = i.IsActivated,
                                     // Content = i.Content,
                                     ContentType = i.ContentType,
                                     Height = i.Height,
@@ -68,11 +76,16 @@ namespace StoreBackend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProduct(int id)
         {
+
+            
             var product = await _context.Products
                 .Select(p => new ProductViewModel
                 {
                     Id = p.Id,
                     Name = p.Name,
+                    IsActivated = p.IsActivated,
+                    LastModified = p.LastModified, 
+                    CreatedDate = p.CreatedDate,
                     ProductDescription = p.ProductDescription,
                     ProductOptions = p.ProductOptions.Select(po => new ProductOptionViewModel
                     {
@@ -80,6 +93,10 @@ namespace StoreBackend.Controllers
                         Name = po.Name,
                         Price = po.Price,
                         ProductId = po.ProductId,
+                        LastModified = po.LastModified,
+                        IsActivated = po.IsActivated,
+                        CreatedDate = po.CreatedDate,
+                        ProductOptionDescription = po.ProductOptionDescription,
                         Images = po.Images
                             .Select(x => x.Image)
                             .Select(i => new ImageViewModel
@@ -88,7 +105,7 @@ namespace StoreBackend.Controllers
                                 Name = i.Name,
                                 CreatedDate = i.CreatedDate,
                                 LastModified = i.LastModified,
-                                IsVisible = i.IsVisible,
+                                IsActivated = i.IsActivated,
                                 // Content = i.Content,
                                 ContentType = i.ContentType,
                                 Height = i.Height,
@@ -151,16 +168,14 @@ namespace StoreBackend.Controllers
             {
                 return BadRequest();
             }
-            else if(ProductExistsByName(product.Name))
-            {
-                return new StatusCodeResult(StatusCodes.Status409Conflict);
-            }
 
             _context.Entry(product).State = EntityState.Modified;
+        
 
             try
             {
                 await _context.SaveChangesAsync();
+                System.Console.WriteLine("updating");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -170,6 +185,7 @@ namespace StoreBackend.Controllers
                 }
                 else
                 {
+                    Console.WriteLine("Failed");
                     throw;
                 }
             }

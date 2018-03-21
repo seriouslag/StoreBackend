@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace StoreBackend.Models
 {
-    public abstract class BaseEntity
+    public abstract class BaseEntityViewModel
     {
         public DateTime? CreatedDate { get; set; }
         public DateTime? LastModified { get; set; }
-        public Boolean? IsActivated { get; set; }
+        public bool? IsActivated { get; set; }
 
-        [Required, StringLength(255)]
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
     }
 }

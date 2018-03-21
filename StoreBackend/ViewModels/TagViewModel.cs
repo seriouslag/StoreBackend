@@ -2,7 +2,7 @@
 
 namespace StoreBackend.ViewModels
 {
-    public class TagViewModel: BaseEntity
+    public class TagViewModel: BaseEntityViewModel
     {
         public int Id { get; set; }
     }

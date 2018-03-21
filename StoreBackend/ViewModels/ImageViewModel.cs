@@ -2,7 +2,7 @@
 
 namespace StoreBackend.Models
 {
-    public class ImageViewModel: BaseEntity
+    public class ImageViewModel: BaseEntityViewModel
     {
         public int Id { get; set; }
 

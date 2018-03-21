@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -33,7 +34,7 @@ namespace StoreBackend.Controllers
                 .Select(id => new ImageViewModel
                 {
                     Id = id.Id,
-                    IsVisible = id.IsVisible,
+                    IsActivated = id.IsActivated,
                     LastModified = id.LastModified,
                     Name = id.Name,
                     CreatedDate = id.CreatedDate,
@@ -42,7 +43,7 @@ namespace StoreBackend.Controllers
                     Height = id.Height,
                     Width = id.Width
                 })
-                .Where(id => id.IsVisible == true);
+                .Where(id => id.IsActivated == true);
 
             if(imageData != null)
             {
@@ -68,7 +69,7 @@ namespace StoreBackend.Controllers
                     .Select(id => new ImageViewModel
                     {
                         Id = id.Id,
-                        IsVisible = id.IsVisible,
+                        IsActivated = id.IsActivated,
                         LastModified = id.LastModified,
                         Name = id.Name,
                         CreatedDate = id.CreatedDate,
@@ -98,13 +99,13 @@ namespace StoreBackend.Controllers
                     LastModified = i.LastModified,
                     Name = i.Name,
                     CreatedDate = i.CreatedDate,
-                    IsVisible = i.IsVisible,
+                    IsActivated = i.IsActivated,
                     // Content = id.Content,
                     ContentType = i.ContentType,
                     Height = i.Height,
                     Width = i.Width
                 })
-                .Where(i => i.IsVisible == true)
+                .Where(i => i.IsActivated == true)
                 .SingleOrDefaultAsync(i => i.Id == id);
 
             if (image == null || image.ToString() == "[]")

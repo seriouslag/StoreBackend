@@ -35,7 +35,7 @@ namespace StoreBackend.Migrations
 
                     b.Property<int>("Height");
 
-                    b.Property<bool?>("IsVisible");
+                    b.Property<bool?>("IsActivated");
 
                     b.Property<DateTime?>("LastModified");
 
@@ -57,7 +57,7 @@ namespace StoreBackend.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool?>("IsVisible");
+                    b.Property<bool?>("IsActivated");
 
                     b.Property<DateTime?>("LastModified");
 
@@ -69,7 +69,8 @@ namespace StoreBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Name");
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Products");
                 });
@@ -94,7 +95,7 @@ namespace StoreBackend.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool?>("IsVisible");
+                    b.Property<bool?>("IsActivated");
 
                     b.Property<DateTime?>("LastModified");
 
@@ -135,7 +136,7 @@ namespace StoreBackend.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<bool?>("IsVisible");
+                    b.Property<bool?>("IsActivated");
 
                     b.Property<DateTime?>("LastModified");
 

@@ -18,7 +18,8 @@ namespace StoreBackend.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>(ps => {
-                ps.HasAlternateKey(p => p.Name);
+                ps.HasIndex(p => p.Name)
+                .IsUnique();
             }); 
              
             modelBuilder.Entity<Product_Tag>()

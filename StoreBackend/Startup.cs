@@ -15,6 +15,7 @@ using System.Net.Http.Headers;
 using Google.Apis.Auth.OAuth2;
 using System.Security.Claims;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 
 namespace StoreBackend
 {
@@ -42,8 +43,9 @@ namespace StoreBackend
             // Set scopes from config
             scopes = Config["Google:firebase_scopes"].Split(',');
 
-
+            services.AddLogging();
             services.AddCors();
+            services.AddLogging();
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,15 +7,13 @@ using System.Threading.Tasks;
 
 namespace StoreBackend.Models
 {
-    public class Tag: BaseEntity
+    public class Cart
     {
-        public Tag()
-        {
-            Products = new List<Product_Tag>();
-        }
-
         public int Id { get; set; }
 
-        public ICollection<Product_Tag> Products { get; set; }
+        public User User { get; set; }
+        public int UserId { get; set; }
+
+        public List<CartItem> CartItems { get; set; }
     }
 }

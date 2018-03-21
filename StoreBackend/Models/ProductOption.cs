@@ -14,17 +14,13 @@ namespace StoreBackend.Models
             Images = new List<ProductOption_Image>();
         }
 
-
         public int Id { get; set; }
         public double Price { get; set; }
         public string ProductOptionDescription { get; set; }
 
-
         public IEnumerable<ProductOption_Image> Images { get; set; }
 
         public int ProductId { get; set; }
-        public Product Product { get; set; }
-
-        
+        public Product Product { get; set; }  
     }
 }
